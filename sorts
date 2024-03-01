@@ -1,0 +1,131 @@
+#include <iostream>
+#include <ctime>
+
+// Function to fill array with random numbers
+template <typename T>
+void fillArray(T array[], int n) {
+	for (int i = 0; i < n; i++)
+		array[i] = rand() % 1000;
+}
+// Function to print original array
+template <typename T>
+void printOriginalArray(T array[], int n) {
+	std::cout << "\nOriginal array of test " << n << "\n";
+	for (int i = 0; i < n; i++) {
+		std::cout << array[i] << " ";
+	}
+}
+
+// Function to print sorted array
+template <typename T>
+void printSortedArray(T array[], int n) {
+    std::cout << "\nSorted array of test " << n << "\n";
+    for (int i = 0; i < n; i++) {
+        std::cout << array[i] << " ";
+    }
+}
+
+// Function to swap two elements
+template <typename T>
+void swap(T* a, T* b) {
+    T temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+// Function to generate a random pivot index
+int generateRandomPivot(int low, int high) {
+    srand(time(NULL));
+    return low + rand() % (high - low + 1);
+}
+
+// Function to perform QuickSort
+template <typename T>
+void quickSort(T array[], int low, int high) {
+    if (low < high) {
+        int pivotIndex = generateRandomPivot(low, high);
+        T pivotValue = array[pivotIndex];
+
+        // Swap the pivot element with the last element
+        swap(&array[pivotIndex], &array[high]);
+
+        int i = low - 1;
+
+        for (int j = low; j < high; j++) {
+            if (array[j] < pivotValue) {
+                i++;
+                swap(&array[i], &array[j]);
+            }
+        }
+
+        // Swap the pivot element back to its final position
+        swap(&array[i + 1], &array[high]);
+
+        // Recursively sort the left and right subarrays
+        quickSort(array, low, i);
+        quickSort(array, i + 2, high);
+    }
+}
+
+// Function to perform Bubble Sort
+template <typename T>
+void bubbleSort(T array[], int n)
+{
+    int i, j;
+    bool swapped;
+    for (i = 0; i < n - 1; i++) {
+        swapped = false;
+        for (j = 0; j < n - i - 1; j++) {
+            if (array[j] > array[j + 1]) {
+                swap(&array[j], &array[j + 1]);
+                swapped = true;
+            }
+        }
+        // If no two elements were swapped by inner loop, then break
+        if (swapped == false)
+            break;
+    }
+}
+
+// Function to perform Insertion Sort
+template <typename T>
+void insertionSort(T arr[], int n)
+{
+    int i, key, j;
+    for (i = 1; i < n; i++) {
+        key = arr[i];
+        j = i - 1;
+
+        /*
+        Move elements of arr[0..i - 1], that are greater than key,
+        to one position ahead of their current position
+        */
+        while (j >= 0 && arr[j] > key) {
+            arr[j + 1] = arr[j];
+            j = j - 1;
+        }
+        arr[j + 1] = key;
+    }
+}
+
+int main() {
+
+	const int test = 200000;
+	int array[test];
+
+	fillArray(array, test);
+	//printOriginalArray(array, test);
+
+    unsigned int start_time = clock();
+
+    quickSort(array, 0, test - 1);
+    //bubbleSort(array,test);
+    //insertionSort(array, test);
+
+    unsigned int end_time = clock();
+    unsigned int search_time = end_time - start_time;
+
+    //printSortedArray(array, test);
+
+    std::cout << "\n" << search_time;
+}
